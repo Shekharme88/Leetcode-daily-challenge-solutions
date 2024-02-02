@@ -1,0 +1,67 @@
+1291. Sequential Digits
+
+An integer has sequential digits if and only if each digit in the number is one more than the previous digit.
+
+Return a sorted list of all the integers in the range [low, high] inclusive that have sequential digits.
+
+ 
+
+Example 1:
+
+Input: low = 100, high = 300
+Output: [123,234]
+Example 2:
+
+Input: low = 1000, high = 13000
+Output: [1234,2345,3456,4567,5678,6789,12345]
+ 
+
+Constraints:
+
+10 <= low <= high <= 10^9
+
+code-
+
+class Solution {
+    public List<Integer> sequentialDigits(int low, int high) {
+        List<Integer> res=new ArrayList<Integer>();
+        int dig_low=digits(low);
+        int dig_high=digits(high);
+        int cur=0;
+        int strtVal[]={0,0,12,123,1234,12345,123456,1234567,12345678,123456789,0};
+        HashMap<Integer,ArrayList<Integer>> map=new HashMap<Integer,ArrayList<Integer>>();
+        for(int i=2;i<=10;i++){
+            map.put(i,new ArrayList<Integer>());
+            cur=strtVal[i];
+            int lastDig=0;
+            map.get(i).add(cur);
+            for(int j=0;j<9-i;j++){
+                lastDig=cur%10;
+                cur=(cur%(int)Math.pow(10,i-1))*10+(lastDig+1);
+                map.get(i).add(cur);
+            }
+        }
+        
+        while(dig_low<=dig_high){
+            ArrayList<Integer> list=map.get(dig_low);
+            for(int i=0;i<list.size();i++){
+                if(list.get(i)<=high && list.get(i)>=low)
+                res.add(list.get(i));
+            }
+            dig_low++;
+        }
+        return res;
+
+    }
+    
+    public int digits(int n){
+        int res=0;
+        while(n!=0){
+            n=n/10;
+            res++;
+        }
+        
+        return res;
+    }
+    
+}
